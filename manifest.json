@@ -191,14 +191,6 @@
         "group": "conditions",
         "example": "12"
       },
-      "precipitation_chance": {
-        "description": "[DEPRECATED] Use precipitation_chance_today. Chance of precipitation as percentage (today's peak)",
-        "type": "number",
-        "max_length": 3,
-        "group": "conditions",
-        "example": "20",
-        "deprecated": true
-      },
       "precipitation_chance_today": {
         "description": "Chance of precipitation as percentage for today (peak across the day)",
         "type": "number",

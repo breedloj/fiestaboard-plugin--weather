@@ -186,11 +186,13 @@ class WeatherSource:
                         if isinstance(low_temp, (int, float)):
                             result["low_temp_c"] = round((low_temp - 32) * 5 / 9)
                         
-                        # Precipitation chance — today's peak (deprecated alias kept for
-                        # backwards compatibility; prefer precipitation_chance_today).
+                        # precipitation_chance_today: today's peak (canonical name).
+                        # precipitation_chance: deprecated alias — still emitted so existing
+                        # templates keep rendering, but omitted from manifest variables.simple
+                        # so it is hidden from the variable picker.
                         today_pop = day_data.get("daily_chance_of_rain", 0)
-                        result["precipitation_chance"] = today_pop
                         result["precipitation_chance_today"] = today_pop
+                        result["precipitation_chance"] = today_pop
 
                         # Near-term precipitation chance — next upcoming hourly bucket
                         # (~1h resolution). Walks today's hours then tomorrow's so it stays
@@ -400,12 +402,14 @@ class WeatherSource:
                     today_pops = daily_data.get(today_str, {}).get("pops", [])
                     if not today_pops:
                         today_pops = [item.get("pop", 0) for item in forecast_data["list"][:8]]
-                    # Today's peak (deprecated alias kept for backwards compatibility;
-                    # prefer precipitation_chance_today).
+                    # precipitation_chance_today: today's peak (canonical name).
+                    # precipitation_chance: deprecated alias — still emitted so existing
+                    # templates keep rendering, but omitted from manifest variables.simple
+                    # so it is hidden from the variable picker.
                     max_pop = max(today_pops) if today_pops else 0
                     today_chance = int(max_pop * 100)
-                    result["precipitation_chance"] = today_chance
                     result["precipitation_chance_today"] = today_chance
+                    result["precipitation_chance"] = today_chance
 
                     # Near-term precipitation chance — next upcoming 3-hour bucket.
                     # OWM's free /forecast endpoint only provides 3-hour granularity;
