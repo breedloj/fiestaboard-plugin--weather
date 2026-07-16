@@ -3,11 +3,23 @@
 Displays current weather conditions using WeatherAPI or OpenWeatherMap.
 """
 
-from typing import Any, Dict, List, Optional
+import importlib
 import logging
+import sys
+from typing import Any, Dict, List, Optional
 
 from src.plugins.base import PluginBase, PluginResult
-from .source import WeatherSource
+
+# FiestaBoard reloads the plugin package after an update but can leave child
+# modules cached. Refresh the data source as well so new provider fields take
+# effect immediately without requiring a full service restart.
+_source_module_name = f"{__name__}.source"
+if _source_module_name in sys.modules:
+    _source_module = importlib.reload(sys.modules[_source_module_name])
+else:
+    from . import source as _source_module
+
+WeatherSource = _source_module.WeatherSource
 
 logger = logging.getLogger(__name__)
 
@@ -139,6 +151,8 @@ class WeatherPlugin(PluginBase):
                 "uv_index": primary.get("uv_index"),
                 "sunrise": primary.get("sunrise"),
                 "sunset": primary.get("sunset"),
+                "next_sun_event": primary.get("next_sun_event"),
+                "next_sun_event_time": primary.get("next_sun_event_time"),
                 # Aggregate fields
                 "location_count": len(all_data),
                 # All locations array
@@ -270,4 +284,3 @@ class WeatherPlugin(PluginBase):
 
 # Export the plugin class
 Plugin = WeatherPlugin
-

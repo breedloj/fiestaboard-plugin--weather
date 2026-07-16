@@ -226,6 +226,20 @@
         "group": "conditions",
         "example": "7:42 PM"
       },
+      "next_sun_event": {
+        "description": "Next solar transition: RISE at night, SET during daylight",
+        "type": "string",
+        "max_length": 4,
+        "group": "conditions",
+        "example": "SET"
+      },
+      "next_sun_event_time": {
+        "description": "Time of the next sunrise or sunset",
+        "type": "string",
+        "max_length": 8,
+        "group": "conditions",
+        "example": "7:42 PM"
+      },
       "temperature_color": {
         "description": "Color code based on temperature",
         "type": "string",
@@ -284,7 +298,9 @@
           "low_temp_c",
           "uv_index",
           "sunrise",
-          "sunset"
+          "sunset",
+          "next_sun_event",
+          "next_sun_event_time"
         ]
       },
       "forecast": {
@@ -323,6 +339,8 @@
     "locations.*.uv_index": 2,
     "locations.*.sunrise": 8,
     "locations.*.sunset": 8,
+    "locations.*.next_sun_event": 4,
+    "locations.*.next_sun_event_time": 8,
     "forecast.*.date": 10,
     "forecast.*.day_name": 3,
     "forecast.*.high_temp": 3,
@@ -415,7 +433,7 @@
         "NOW  {{weather.locations.0.temperature}}F   {{weather.locations.0.condition}}    {{weather.locations.0.humidity}}%",
         "LIKE {{weather.locations.0.feels_like}}F WIND {{weather.locations.0.wind_speed}}  MPH",
         "HIGH {{weather.locations.0.high_temp}}F  UV {{weather.locations.0.uv_index}}{{weather.uv_index_color}}",
-        "LOW {{weather.locations.0.low_temp}}F  SET {{weather.locations.0.sunset}}"
+        "LOW {{weather.locations.0.low_temp}}F {{weather.locations.0.next_sun_event}} {{weather.locations.0.next_sun_event_time}}"
       ],
       "line_metadata": [
         {

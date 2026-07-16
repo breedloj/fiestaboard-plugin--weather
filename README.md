@@ -53,7 +53,13 @@ For detailed setup instructions, see the **[Setup Guide](./docs/SETUP.md)**.
 {{weather.temperature_color}}    # Temperature color tile
 {{weather.sunrise}}              # Sunrise time (e.g., "6:12 AM")
 {{weather.sunset}}               # Sunset time (e.g., "8:36 PM")
+{{weather.next_sun_event}}       # RISE at night, SET during daylight
+{{weather.next_sun_event_time}}  # Time of the next sunrise or sunset
 ```
+
+> **OpenWeatherMap DST note:** After sunset, tomorrow's sunrise is calculated
+> using OpenWeatherMap's current UTC offset. It can be one hour off on the
+> night before a daylight-saving transition, until the provider offset updates.
 
 ### Multiple Locations
 
@@ -78,6 +84,8 @@ For detailed setup instructions, see the **[Setup Guide](./docs/SETUP.md)**.
 {{weather.locations.0.precipitation_chance_next}}  # First location near-term rain chance (0-100)
 {{weather.locations.0.sunrise}}               # First location sunrise time
 {{weather.locations.0.sunset}}                # First location sunset time
+{{weather.locations.0.next_sun_event}}        # First location next event: RISE or SET
+{{weather.locations.0.next_sun_event_time}}   # First location next sunrise/sunset time
 {{weather.locations.1.temperature}}           # Second location temp in Fahrenheit
 {{weather.locations.1.temperature_c}}         # Second location temp in Celsius
 {{weather.locations.1.feels_like}}            # Second location feels-like temp in Fahrenheit
@@ -97,6 +105,8 @@ For detailed setup instructions, see the **[Setup Guide](./docs/SETUP.md)**.
 {{weather.locations.1.precipitation_chance_next}}  # Second location near-term rain chance (0-100)
 {{weather.locations.1.sunrise}}               # Second location sunrise time
 {{weather.locations.1.sunset}}                # Second location sunset time
+{{weather.locations.1.next_sun_event}}        # Second location next event: RISE or SET
+{{weather.locations.1.next_sun_event_time}}   # Second location next sunrise/sunset time
 ```
 
 ## Example Templates
@@ -116,7 +126,7 @@ Humidity: {{weather.humidity}}%
 NOW {{weather.temperature}} F {{weather.condition}} {{weather.precipitation_chance_today}}%
 LIKE {{weather.feels_like}} F WIND {{weather.wind_speed}} MPH
 HIGH {{weather.high_temp}} F UV {{weather.uv_index}}
-LOW {{weather.low_temp}} F SET {{weather.sunset}}
+LOW {{weather.low_temp}} F {{weather.next_sun_event}} {{weather.next_sun_event_time}}
 ```
 
 ### Multiple Locations
@@ -207,4 +217,3 @@ FiestaBoard Team
 ## License
 
 MIT
-
