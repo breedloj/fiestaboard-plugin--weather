@@ -138,6 +138,7 @@ class WeatherPlugin(PluginBase):
                 "feels_like": primary.get("feels_like"),
                 "feels_like_c": primary.get("feels_like_c"),
                 "condition": primary.get("condition"),
+                "condition_short": primary.get("condition_short"),
                 "humidity": primary.get("humidity"),
                 "wind_speed": primary.get("wind_speed"),
                 "location": primary.get("location"),

@@ -130,6 +130,7 @@ Wind: {weather.wind_speed}mph
 {weather.feels_like}         # Feels like temperature in Fahrenheit (e.g., "65")
 {weather.feels_like_c}       # Feels like temperature in Celsius (e.g., "18")
 {weather.condition}          # Weather condition (e.g., "Partly Cloudy")
+{weather.condition_short}    # Note-friendly condition (e.g., "CLOUDY")
 {weather.humidity}           # Humidity percentage (e.g., "75")
 {weather.wind_speed}         # Wind speed in mph (e.g., "12")
 {weather.high_temp}          # Daily high temperature in Fahrenheit
@@ -163,6 +164,7 @@ Access by index (0-based):
 {weather.locations.0.temperature_c}         # Temperature in Celsius
 {weather.locations.0.feels_like}            # Feels-like temp in Fahrenheit
 {weather.locations.0.condition}             # Weather condition
+{weather.locations.0.condition_short}       # Note-friendly weather condition
 {weather.locations.0.humidity}              # Humidity percentage
 {weather.locations.0.wind_speed}            # Wind speed in mph
 {weather.locations.0.high_temp}             # Daily high in Fahrenheit

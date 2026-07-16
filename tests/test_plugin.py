@@ -72,6 +72,7 @@ class TestWeatherSource:
         assert result is not None
         assert isinstance(result, dict)
         assert result["temperature"] == 72
+        assert result["condition_short"] == "SUNNY"
     
     @patch('requests.get')
     def test_fetch_weather_api_error(self, mock_get):
@@ -618,6 +619,7 @@ class TestWeatherForecastData:
 
         assert result is not None
         assert result["temperature"] == 63
+        assert result["condition_short"] == "RAIN"
         assert result["high_temp"] == 65
         assert result["low_temp"] == 52
         assert result["precipitation_chance"] == 10  # max(0.0, 0.1) * 100
@@ -1343,6 +1345,37 @@ class TestGetTemperatureColor:
         assert _get_temperature_color("not_a_number") == "white"
 
 
+class TestGetShortCondition:
+    """Tests for compact condition labels used on Note displays."""
+
+    @pytest.mark.parametrize(("condition", "expected"), [
+        ("Partly cloudy", "CLOUDY"),
+        ("Overcast", "CLOUDY"),
+        ("Patchy light rain with thunder", "T-STORM"),
+        ("Light rain shower", "SHOWERS"),
+        ("Freezing rain", "ICE"),
+        ("Ice pellets", "SLEET"),
+        ("Blowing snow", "SNOW"),
+        ("Mist", "MIST"),
+        ("Sunny", "SUNNY"),
+        ("Clear", "CLEAR"),
+        ("Unsettled weather", "UNSETTLED"),
+        (None, ""),
+    ])
+    def test_condition_mapping(self, condition, expected):
+        from plugins.weather.source import _get_short_condition
+
+        assert _get_short_condition(condition) == expected
+
+    def test_unknown_condition_keeps_whole_words(self):
+        from plugins.weather.source import _get_short_condition
+
+        value = _get_short_condition("Very unusual weather")
+
+        assert value == "VERY"
+        assert len(value) <= 9
+
+
 class TestWeatherApiForecastArray:
     """Tests for multi-day forecast array from WeatherAPI."""
 
@@ -1658,6 +1691,7 @@ class TestForecastDisplay:
                 "feels_like": 62,
                 "feels_like_c": 17,
                 "condition": "Rain",
+                "condition_short": "RAIN",
                 "humidity": 80,
                 "wind_speed": 14,
                 "location": "San Francisco",
@@ -1678,6 +1712,7 @@ class TestForecastDisplay:
         with patch.object(plugin, '_get_source', return_value=mock_source):
             result = plugin.fetch_data()
             assert result.available is True
+            assert result.data["condition_short"] == "RAIN"
             assert "forecast" in result.data
             assert len(result.data["forecast"]) == 2
 
@@ -1705,7 +1740,16 @@ class TestManifestMetadata:
 
     def test_simple_var_count(self):
         simple = self.manifest["variables"]["simple"]
-        assert len(simple) == 23, f"Expected 23 simple vars, got {len(simple)}"
+        assert len(simple) == 24, f"Expected 24 simple vars, got {len(simple)}"
+
+    def test_short_condition_is_exposed_for_note_displays(self):
+        simple = self.manifest["variables"]["simple"]
+        location_fields = self.manifest["variables"]["arrays"]["locations"]["item_fields"]
+
+        assert simple["condition_short"]["max_length"] == 9
+        assert "condition_short" in location_fields
+        assert self.manifest["max_lengths"]["locations.*.condition_short"] == 9
+        assert "condition_short" in self.manifest["demo"]["note"]["template"][1]
 
     def test_next_sun_event_is_exposed_for_primary_and_location_data(self):
         simple = self.manifest["variables"]["simple"]

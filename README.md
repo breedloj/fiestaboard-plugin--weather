@@ -37,6 +37,7 @@ For detailed setup instructions, see the **[Setup Guide](./docs/SETUP.md)**.
 {{weather.feels_like}}           # Feels like temp in Fahrenheit
 {{weather.feels_like_c}}         # Feels like temp in Celsius
 {{weather.condition}}            # Condition text (e.g., "Partly Cloudy")
+{{weather.condition_short}}      # Note-friendly condition (e.g., "CLOUDY")
 {{weather.humidity}}             # Humidity percentage
 {{weather.wind_speed}}           # Wind speed in mph
 {{weather.location}}             # Location name from API
@@ -70,6 +71,7 @@ For detailed setup instructions, see the **[Setup Guide](./docs/SETUP.md)**.
 {{weather.locations.0.feels_like}}            # First location feels-like temp in Fahrenheit
 {{weather.locations.0.feels_like_c}}          # First location feels-like temp in Celsius
 {{weather.locations.0.condition}}             # First location weather condition
+{{weather.locations.0.condition_short}}       # First location Note-friendly condition
 {{weather.locations.0.humidity}}              # First location humidity percentage
 {{weather.locations.0.wind_speed}}            # First location wind speed in mph
 {{weather.locations.0.location}}              # First location name from API

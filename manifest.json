@@ -177,6 +177,13 @@
         "group": "conditions",
         "example": "Partly Cloudy"
       },
+      "condition_short": {
+        "description": "Note-friendly weather condition, normalized to nine characters or fewer",
+        "type": "string",
+        "max_length": 9,
+        "group": "conditions",
+        "example": "CLOUDY"
+      },
       "humidity": {
         "description": "Humidity percentage",
         "type": "number",
@@ -285,6 +292,7 @@
           "feels_like",
           "feels_like_c",
           "condition",
+          "condition_short",
           "humidity",
           "wind_speed",
           "location",
@@ -325,6 +333,7 @@
     "locations.*.feels_like": 3,
     "locations.*.feels_like_c": 3,
     "locations.*.condition": 12,
+    "locations.*.condition_short": 9,
     "locations.*.humidity": 3,
     "locations.*.wind_speed": 3,
     "locations.*.location": 15,
@@ -466,7 +475,7 @@
       "name": "Weather (Note)",
       "template": [
         "{{weather.locations.0.location_name}}",
-        "{{weather.locations.0.temperature}}F {{weather.locations.0.condition}}",
+        "{{weather.locations.0.temperature}}F {{weather.locations.0.condition_short}}",
         "HI {{weather.locations.0.high_temp}} LO {{weather.locations.0.low_temp}}"
       ],
       "line_metadata": [

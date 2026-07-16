@@ -40,6 +40,56 @@ def _get_temperature_color(temp_f: Any) -> str:
     return "violet"
 
 
+def _get_short_condition(condition: Any) -> str:
+    """Return a Note-friendly condition label no longer than nine characters."""
+    if not isinstance(condition, str):
+        return ""
+
+    normalized = " ".join(condition.upper().split())
+    if not normalized:
+        return ""
+
+    mappings = (
+        ("THUNDER", "T-STORM"),
+        ("TORNADO", "TORNADO"),
+        ("SQUALL", "SQUALL"),
+        ("FREEZING", "ICE"),
+        ("ICE PELLET", "SLEET"),
+        ("SLEET", "SLEET"),
+        ("BLIZZARD", "BLIZZARD"),
+        ("SNOW", "SNOW"),
+        ("DRIZZLE", "DRIZZLE"),
+        ("SHOWER", "SHOWERS"),
+        ("RAIN", "RAIN"),
+        ("FOG", "FOG"),
+        ("MIST", "MIST"),
+        ("HAZE", "HAZE"),
+        ("SMOKE", "SMOKE"),
+        ("DUST", "DUST"),
+        ("SAND", "DUST"),
+        ("OVERCAST", "CLOUDY"),
+        ("CLOUD", "CLOUDY"),
+        ("CLEAR", "CLEAR"),
+        ("SUNNY", "SUNNY"),
+        ("WIND", "WINDY"),
+        ("GALE", "WINDY"),
+    )
+    for keyword, label in mappings:
+        if keyword in normalized:
+            return label
+
+    if len(normalized) <= 9:
+        return normalized
+
+    words = []
+    for word in normalized.split():
+        candidate = " ".join((*words, word))
+        if len(candidate) > 9:
+            break
+        words.append(word)
+    return " ".join(words) if words else normalized[:9]
+
+
 class WeatherSource:
     """Fetches current weather data from weather APIs."""
     
@@ -148,12 +198,14 @@ class WeatherSource:
             temp_c = (temp_f - 32) * 5 / 9 if isinstance(temp_f, (int, float)) else None
             feels_like_c = (feels_like_f - 32) * 5 / 9 if isinstance(feels_like_f, (int, float)) else None
             
+            condition = current_data["current"]["condition"]["text"]
             result = {
                 "temperature": round(temp_f) if isinstance(temp_f, (int, float)) else temp_f,
                 "temperature_c": round(temp_c) if temp_c is not None else None,
                 "feels_like": round(feels_like_f) if isinstance(feels_like_f, (int, float)) else feels_like_f,
                 "feels_like_c": round(feels_like_c) if feels_like_c is not None else None,
-                "condition": current_data["current"]["condition"]["text"],
+                "condition": condition,
+                "condition_short": _get_short_condition(condition),
                 "humidity": current_data["current"]["humidity"],
                 "wind_mph": current_data["current"]["wind_mph"],
                 "wind_speed": current_data["current"]["wind_mph"],  # Alias for template compatibility
@@ -484,13 +536,16 @@ class WeatherSource:
             temp_c = (temp - 32) * 5 / 9 if isinstance(temp, (int, float)) else None
             feels_like_c = (feels_like - 32) * 5 / 9 if isinstance(feels_like, (int, float)) else None
             
+            condition = current_data["weather"][0]["main"]
+            description = current_data["weather"][0]["description"]
             result = {
                 "temperature": round(temp) if isinstance(temp, (int, float)) else temp,
                 "temperature_c": round(temp_c) if temp_c is not None else None,
                 "feels_like": round(feels_like) if isinstance(feels_like, (int, float)) else feels_like,
                 "feels_like_c": round(feels_like_c) if feels_like_c is not None else None,
-                "condition": current_data["weather"][0]["main"],
-                "description": current_data["weather"][0]["description"],
+                "condition": condition,
+                "condition_short": _get_short_condition(description or condition),
+                "description": description,
                 "humidity": current_data["main"]["humidity"],
                 "wind_mph": current_data["wind"]["speed"],
                 "wind_speed": current_data["wind"]["speed"],  # Alias for template compatibility
