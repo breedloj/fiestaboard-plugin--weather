@@ -137,7 +137,10 @@ class WeatherPlugin(PluginBase):
                 "low_temp": primary.get("low_temp"),
                 "low_temp_c": primary.get("low_temp_c"),
                 "uv_index": primary.get("uv_index"),
+                "sunrise": primary.get("sunrise"),
                 "sunset": primary.get("sunset"),
+                "next_sun_event": primary.get("next_sun_event"),
+                "next_sun_event_time": primary.get("next_sun_event_time"),
                 # Aggregate fields
                 "location_count": len(all_data),
                 # All locations array
